@@ -122,3 +122,59 @@ np.random.choice(df["Age"], size=30, replace=True)  # bootstrap sample
 Data selection → Aggregation → Handle missing values → Grouping/New columns → Descriptive stats → Correlation → Reshape/Merge → Sampling & Visualization
 
 ---
+
+# 📌 Pandas (Continuation)
+
+## Dropping Columns
+
+* `df.drop(columns=['col1', 'col2'], axis=1, inplace=True)`
+
+  * **`axis=1`** → specifies that columns (not rows) should be dropped.
+  * **`inplace=True`** → modifies the original DataFrame instead of returning a new one.
+
+---
+
+## Creating Derived Features
+
+```python
+df['is_long'] = (df['Distance (km)'] >= 20).astype(int)
+```
+
+* Creates a new column `is_long`.
+* Boolean condition (`True`/`False`) → converted into integers (`1`/`0`) with `.astype(int)`.
+
+---
+
+## Missing Values & Outlier Detection
+
+* **Missing Values**
+
+  ```python
+  df.isna().sum()
+  ```
+
+  → Counts missing values per column.
+
+* **IQR Outlier Detection**
+
+  ```python
+  q1 = df['col'].quantile(0.25)
+  q3 = df['col'].quantile(0.75)
+  iqr = q3 - q1
+  low, high = q1 - 1.5*iqr, q3 + 1.5*iqr
+  outliers = df[(df['col'] < low) | (df['col'] > high)]
+  ```
+
+  → Identifies rows outside the interquartile range.
+
+---
+
+## One-Hot Encoding
+
+```python
+encoded = pd.get_dummies(df, columns=['Category'], drop_first=False, dtype='int8')
+```
+
+* Converts categorical string columns into multiple binary (0/1) columns.
+* Helps machine learning models by representing categories numerically **without implying order**.
+
